@@ -1,0 +1,11 @@
+sudo: required
+
+services:
+  - docker
+  - docekr-compose
+
+before_install:
+  - sudo pip install docker-compose
+
+script:
+  - docker-compose up -d

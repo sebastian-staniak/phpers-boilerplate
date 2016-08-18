@@ -14,7 +14,7 @@ $channel = $connection->channel();
 /*
     The following code is the same both in the consumer and the producer.
     In this way we are sure we always have a queue to consume from and an
-        exchange where to publish messages.
+    exchange where to publish messages.
 */
 
 /*
