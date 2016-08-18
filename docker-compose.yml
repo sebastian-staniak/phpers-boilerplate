@@ -1,0 +1,27 @@
+version: '2'
+services:
+  app:
+    build: app
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    ports:
+      - 8080:8080
+    command: php -S 0.0.0.0:8080
+  rabbit:
+    image: rabbitmq:management
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+  neo4j:
+    image: neo4j:latest
+    volumes:
+      - $HOME/neo4j/data:/data
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      NEO4J_AUTH: none
