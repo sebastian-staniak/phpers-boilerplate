@@ -1,6 +1,13 @@
 {
-  "require": {
+  "autoload": {
+    "psr-0": {
+      "": "src/"
+    }
+  },
+    "require": {
     "php-amqplib/php-amqplib": "2.6.*",
-    "graphaware/neo4j-php-client": "^4.0"
+    "graphaware/neo4j-php-client": "^4.0",
+    "silex/silex": "~2.0",
+    "ramsey/uuid": "^3.5"
   }
 }
