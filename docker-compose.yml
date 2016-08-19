@@ -7,7 +7,7 @@ services:
       - .:/var/www
     ports:
       - 8080:8080
-    command: cd app/web && php -S 0.0.0.0:8080
+    command: php -S 0.0.0.0:8080
   rabbit:
     image: rabbitmq:management
     ports:
