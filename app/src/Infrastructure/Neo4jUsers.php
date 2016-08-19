@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Infrastructure;
 
@@ -90,5 +91,25 @@ class Neo4jUsers implements Users
             "MATCH (skill:Skill) WHERE (skill.name = \"{$skill->getName()}\")" .
             "CREATE (user)-[:CAN]->(skill)";
         $this->neo4j->run($query);
+    }
+
+    public function getFriends(User $user)
+    {
+        $query = "match (friends)-[:KNOWS]-(user:Person) 
+                WHERE (user.id = \"{$user->getUuid()->toString()}\")
+                return distinct friends";
+        $result = $this->neo4j->run($query);
+
+        $records = $result->getRecords();
+        $friends = [];
+        foreach ($records as $record) {
+            $friends[] = User::fromScalars(
+                $record->get('friends')->value('firstname'),
+                $record->get('friends')->value('lastname'),
+                Uuid::fromString($record->get('friends')->value('id'))
+            );
+        }
+
+        return $friends;
     }
 }

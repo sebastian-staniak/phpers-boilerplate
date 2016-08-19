@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -54,5 +55,30 @@ $app->post('/user/{id}/skills', function ($id, Request $request) use ($app, $use
     return new JsonResponse(["id" => $user1->getUuid()->toString()], 201);
 });
 
+$app->post('/user/{id}/posts', function ($id, Request $request) use ($app, $users, $skills) {
+    $data = json_decode($request->getContent(), true);
+
+    $user = $users->findUser(\Ramsey\Uuid\Uuid::fromString($id));
+    $post = \Domain\Post::fromScalar($data["content"]);
+
+    $command = new \Application\WritePost(
+        $post,
+        $user
+    );
+
+    (new \Infrastructure\Neo4JWritePostHandler())->handle($command);
+
+    return new JsonResponse(["id" => $post->getUuid()->toString()], 201);
+});
+
+$app->get('/user/{id}/feed', function ($id) use ($app, $users) {
+    $user = $users->findUser(\Ramsey\Uuid\Uuid::fromString($id));
+
+    $feed = (new \Infrastructure\RedisGetUserFeedHandler())->handle(
+        new \Application\GetUserFeed($user)
+    );
+
+    return new JsonResponse($feed);
+});
 
 $app->run();

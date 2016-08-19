@@ -8,6 +8,7 @@ services:
     ports:
       - 8080:8080
     command: php -S 0.0.0.0:8080
+
   rabbit:
     image: rabbitmq:management
     ports:
@@ -16,6 +17,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+
   neo4j:
     image: neo4j:latest
     volumes:
@@ -25,3 +27,8 @@ services:
       - 7687:7687
     environment:
       NEO4J_AUTH: none
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379

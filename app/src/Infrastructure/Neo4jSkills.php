@@ -1,11 +1,13 @@
 <?php
+declare(strict_types=1);
 
 namespace Infrastructure;
 
+use Application\Skills;
 use Domain\Skill;
 use GraphAware\Neo4j\Client\ClientBuilder;
 
-class Neo4jSkills
+class Neo4jSkills implements Skills
 {
 
     /**
