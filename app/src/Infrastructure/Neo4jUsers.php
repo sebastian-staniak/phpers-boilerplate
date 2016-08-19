@@ -3,6 +3,7 @@
 namespace Infrastructure;
 
 use Application\Users;
+use Domain\Skill;
 use Domain\User;
 use GraphAware\Neo4j\Client\ClientBuilder;
 use Ramsey\Uuid\Uuid;
@@ -53,8 +54,8 @@ class Neo4jUsers implements Users
     {
         $query = "MATCH (user1:Person) WHERE (user1.id = \"{$user1->getUuid()->toString()}\")" .
             "MATCH (user2:Person) WHERE (user2.id = \"{$user2->getUuid()->toString()}\")" .
-            "CREATE (user1)-[:KNOWS]->(user2)";
-            "CREATE (user1)<-[:KNOWS]-(user2)";
+            "CREATE (user1)-[:KNOWS]->(user2)" .
+            "CREATE (user2)-[:KNOWS]->(user1)";
         $this->neo4j->run($query);
     }
 
@@ -76,5 +77,18 @@ class Neo4jUsers implements Users
         );
 
         return $user;
+    }
+
+    /**
+     * @param User $user
+     * @param Skill $skill
+     * @throws \GraphAware\Neo4j\Client\Exception\Neo4jException
+     */
+    public function addSkillToUser(User $user, Skill $skill)
+    {
+        $query = "MATCH (user:Person) WHERE (user.id = \"{$user->getUuid()->toString()}\")" .
+            "MATCH (skill:Skill) WHERE (skill.name = \"{$skill->getName()}\")" .
+            "CREATE (user)-[:CAN]->(skill)";
+        $this->neo4j->run($query);
     }
 }
