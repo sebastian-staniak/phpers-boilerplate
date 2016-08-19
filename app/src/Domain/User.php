@@ -27,11 +27,11 @@ class User
      * @param string $firstname
      * @param string $lastname
      */
-    private function __construct($firstname, $lastname)
+    private function __construct(string $firstname, string $lastname, Uuid $uuid)
     {
         $this->firstname = $firstname;
         $this->lastname = $lastname;
-        $this->uuid = Uuid::uuid1();
+        $this->uuid = $uuid;
     }
 
 
@@ -40,7 +40,7 @@ class User
      * @param string $lastname
      * @return User
      */
-    public static function fromScalars(string $firstname, string $lastname) : User
+    public static function fromScalars(string $firstname, string $lastname, Uuid $uuid = null) : User
     {
         if ($firstname === "") {
             throw new \DomainException("Firstname cannot be empty");
@@ -49,8 +49,12 @@ class User
         if ($lastname === "") {
             throw new \DomainException("Firstname cannot be empty");
         }
+
+        if ($uuid === null) {
+            $uuid = Uuid::uuid1();
+        }
         
-        return new self($firstname, $lastname);
+        return new self($firstname, $lastname, $uuid);
     }
     /**
      * @return string

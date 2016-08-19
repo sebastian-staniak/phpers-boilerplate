@@ -21,7 +21,18 @@ $app->post('/user', function (Request $request) use ($app, $users) {
 $app->delete('/user/{id}', function ($id) use ($app, $users) {
     $users->deleteUser(\Ramsey\Uuid\Uuid::fromString($id));
 
-    return new JsonResponse(null, 201);
+    return new JsonResponse(["deleted"], 200);
 });
+
+$app->post('/user/{id}/friends', function ($id, Request $request) use ($app, $users) {
+    $data = json_decode($request->getContent(), true);
+
+    $user1 = $users->findUser(\Ramsey\Uuid\Uuid::fromString($id));
+    $user2 = $users->findUser(\Ramsey\Uuid\Uuid::fromString($data["userId"]));
+    $users->matchAsFriends($user1, $user2);
+
+    return new JsonResponse(["id" => $user1->getUuid()->toString()], 201);
+});
+
 
 $app->run();
