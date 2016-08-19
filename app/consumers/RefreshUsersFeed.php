@@ -34,7 +34,7 @@ function process_message($message)
     $redis->connect('redis.phpers.dev', 6379);
     foreach ($friends as $friend) {
         $feed = $redis->get("user_feed_{$friend->getUuid()->toString()}");
-        $feed .= "test";
+        $feed .= json_decode($message->body, true)["content"];
         $redis->set("user_feed_{$friend->getUuid()->toString()}", $feed);
         echo "User with id {$friend->getUuid()->toString()} has been updated \n";
     }

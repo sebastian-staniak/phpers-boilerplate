@@ -56,7 +56,7 @@ class Neo4JWritePostHandler
             "CREATE (user)-[:WRITES]->(post)";
         $this->neo4j->run($query);
 
-        $message = new AMQPMessage(json_encode(["userId" => $command->getUser()->getUuid()]));
+        $message = new AMQPMessage(json_encode(["userId" => $command->getUser()->getUuid(), "content" => $command->getPost()->getContent()]));
         $this->channel->basic_publish($message, self::EXCHANGE_NAME);
     }
 
